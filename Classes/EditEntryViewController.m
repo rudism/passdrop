@@ -490,6 +490,9 @@ PassDropAppDelegate *app;
                 } else {
                     offset = 36;
                 }
+                if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
+                    offset += 16;
+                }
                 [field setFrame:CGRectMake(offset, 0, cell.contentView.frame.size.width - offset, cell.contentView.frame.size.height)];
             } else {
                 [cell.imageView setImage:nil];
