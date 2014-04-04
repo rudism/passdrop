@@ -4,6 +4,10 @@ PassDrop is a fully-featured secure password management system, compatible with 
 
 The current version 1.22 is available on the [iOS App Store](http://itunes.apple.com/us/app/passdrop/id431185109). Version 1.23 which has been optimized for iOS 7 has been submitted to Apple and is awaiting approval as of 4/4/2014.
 
+##PassDrop FAQ
+
+If you are experiencing issues or need help using PassDrop, please check out the [PassDrop FAQ](https://github.com/rudism/passdrop/blob/master/FAQ.md).
+
 ##Current Features (1.23)
 
 - Strong emphasis on clean, simple, intuitive user interface
