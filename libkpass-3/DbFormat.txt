@@ -1,0 +1,233 @@
+===============================================================================
+* : DReichl :: FORMAT 3.0.2
+===============================================================================
+
+Thanks to Naomaru Itoi for updating the documentation to 3.0.2.
+
+General structure:
+
+[DBHDR][GROUPINFO][GROUPINFO][GROUPINFO]...[ENTRYINFO][ENTRYINFO][ENTRYINFO]...
+
+[1x] Database header
+[Nx] All groups
+[Mx] All entries
+
+===============================================================================
+
+Database header: [DBHDR]
+
+[ 4 bytes] DWORD    dwSignature1  = 0x9AA2D903
+[ 4 bytes] DWORD    dwSignature2  = 0xB54BFB65
+[ 4 bytes] DWORD    dwFlags
+[ 4 bytes] DWORD    dwVersion       { Ve.Ve.Mj.Mj:Mn.Mn.Bl.Bl }
+[16 bytes] BYTE{16} aMasterSeed
+[16 bytes] BYTE{16} aEncryptionIV
+[ 4 bytes] DWORD    dwGroups        Number of groups in database
+[ 4 bytes] DWORD    dwEntries       Number of entries in database
+[32 bytes] BYTE{32} aContentsHash   SHA-256 hash value of the plain contents
+[32 bytes] BYTE{32} aMasterSeed2    Used for the dwKeyEncRounds AES
+                                    master key transformations
+[ 4 bytes] DWORD    dwKeyEncRounds  See above; number of transformations
+
+Notes:
+
+- dwFlags is a bitmap, which can include:
+  * PWM_FLAG_SHA2     (1) for SHA-2.
+  * PWM_FLAG_RIJNDAEL (2) for AES (Rijndael).
+  * PWM_FLAG_ARCFOUR  (4) for ARC4.
+  * PWM_FLAG_TWOFISH  (8) for Twofish.
+- aMasterSeed is a salt that gets hashed with the transformed user master key
+  to form the final database data encryption/decryption key.
+  * FinalKey = SHA-256(aMasterSeed, TransformedUserMasterKey)
+- aEncryptionIV is the initialization vector used by AES/Twofish for
+  encrypting/decrypting the database data.
+- aContentsHash: "plain contents" refers to the database file, minus the
+  database header, decrypted by FinalKey.
+  * PlainContents = Decrypt_with_FinalKey(DatabaseFile - DatabaseHeader)
+
+===============================================================================
+
+One group: [FIELDTYPE(FT)][FIELDSIZE(FS)][FIELDDATA(FD)]
+           [FT+FS+(FD)][FT+FS+(FD)][FT+FS+(FD)][FT+FS+(FD)][FT+FS+(FD)]...
+
+[ 2 bytes] FIELDTYPE
+[ 4 bytes] FIELDSIZE, size of FIELDDATA in bytes
+[ n bytes] FIELDDATA, n = FIELDSIZE
+
+Notes:
+- Strings are stored in UTF-8 encoded form and are null-terminated.
+- FIELDTYPE can be one of the following identifiers:
+  * 0000: Invalid or comment block, block is ignored
+  * 0001: Group ID, FIELDSIZE must be 4 bytes
+          It can be any 32-bit value except 0 and 0xFFFFFFFF
+  * 0002: Group name, FIELDDATA is an UTF-8 encoded string
+  * 0003: Creation time, FIELDSIZE = 5, FIELDDATA = packed date/time
+  * 0004: Last modification time, FIELDSIZE = 5, FIELDDATA = packed date/time
+  * 0005: Last access time, FIELDSIZE = 5, FIELDDATA = packed date/time
+  * 0006: Expiration time, FIELDSIZE = 5, FIELDDATA = packed date/time
+  * 0007: Image ID, FIELDSIZE must be 4 bytes
+  * 0008: Level, FIELDSIZE = 2
+  * 0009: Flags, 32-bit value, FIELDSIZE = 4
+  * FFFF: Group entry terminator, FIELDSIZE must be 0
+
+===============================================================================
+
+One entry: [FIELDTYPE(FT)][FIELDSIZE(FS)][FIELDDATA(FD)]
+           [FT+FS+(FD)][FT+FS+(FD)][FT+FS+(FD)][FT+FS+(FD)][FT+FS+(FD)]...
+
+[ 2 bytes] FIELDTYPE
+[ 4 bytes] FIELDSIZE, size of FIELDDATA in bytes
+[ n bytes] FIELDDATA, n = FIELDSIZE
+
+Notes:
+- Strings are stored in UTF-8 encoded form and are null-terminated.
+- FIELDTYPE can be one of the following identifiers:
+  * 0000: Invalid or comment block, block is ignored
+  * 0001: UUID, uniquely identifying an entry, FIELDSIZE must be 16
+  * 0002: Group ID, identifying the group of the entry, FIELDSIZE = 4
+          It can be any 32-bit value except 0 and 0xFFFFFFFF
+  * 0003: Image ID, identifying the image/icon of the entry, FIELDSIZE = 4
+  * 0004: Title of the entry, FIELDDATA is an UTF-8 encoded string
+  * 0005: URL string, FIELDDATA is an UTF-8 encoded string
+  * 0006: UserName string, FIELDDATA is an UTF-8 encoded string
+  * 0007: Password string, FIELDDATA is an UTF-8 encoded string
+  * 0008: Notes string, FIELDDATA is an UTF-8 encoded string
+  * 0009: Creation time, FIELDSIZE = 5, FIELDDATA = packed date/time
+  * 000A: Last modification time, FIELDSIZE = 5, FIELDDATA = packed date/time
+  * 000B: Last access time, FIELDSIZE = 5, FIELDDATA = packed date/time
+  * 000C: Expiration time, FIELDSIZE = 5, FIELDDATA = packed date/time
+  * 000D: Binary description UTF-8 encoded string
+  * 000E: Binary data
+  * FFFF: Entry terminator, FIELDSIZE must be 0
+
+===============================================================================
+
+Changes since last proposal:
+- Strings are null-terminated now.
+- FIELDTYPE now is 2 bytes.
+- Added SHA-256 hash value of plain data in header (32 bytes).
+
+
+
+
+===============================================================================
+* 041116b: DonAngel :: COMMENTS:
+===============================================================================
+
+In general, I agree completely with the DB structure below. My only concern is
+the FieldType parameter, which is one byte now. I think we should make it at
+least two bytes (see my comments below).
+
+I also suggest two layer database structure:
+
+A) Layer 1: this layer takes care for the "physical" management of the database
+data. This "physical" management is: reading/writing/encoding/decoding etc.
+This layer recognizes two kinds of "items" - "groups" and "entries".
+Each "group" or "entry" constructed by "fields", which have ID (from 0-254,
+because 0xFF is reserved).
+
+* All the layer(s) above access all data by specifying the type of item
+  ("Group" or "Entry") and the field ID.
+* The layer works with binary data only (it does not care if a given field is
+  string, DWORD and so on).
+
+B) Layer 2: this layer takes care for the "logical" management of all Layer 1
+data. This layer knows the actual "logical" types of all binary data, and makes
+all the necessary transitions to Layer 1.
+
+This layer knows all the fields kinds, convertion, types etc. In different
+product versions there may be different supported fields (because of different
+Layer 2 implementations), but the most important thing is that a field ID never
+changes (only increases if a new field is added). This is done in order to
+ensure compatibility with previous versions. 
+Currently Field ID is byte. I suggest also we make it at least two bytes.
+
+------
+
+Why I suggest this more complex way of working? Because I think that this will
+give us better versions support. Assume, for example, that the users want some
+additional data in the next versions. If we have what I propose, we just add
+new field. Layer 1 of the older versions will support this field, because it
+will know its binary size. Layer 2 of the older versions will never touch this
+field, because they do not know it exists. BUT layer 1 will always save the
+data at this field, because it has read the data from the disk! So - Layer 1
+will *not* fill the field, but it will not also remove the data in it.
+No need for "import", "export" etc - an universal approach.
+
+The disadvantage of this solution is the two-layer architecture. But I think
+that if we make Layer 1 once, it will be usable for any kind of similar
+application too :).
+
+
+
+
+===============================================================================
+* 041116a: DReichl :: ORIGINAL DOCUMENT: [OBSOLETE]
+===============================================================================
+
+General structure:
+
+[1x] Database header
+[Nx] All groups
+[Mx] All entries
+
+===============================================================================
+
+Database header:
+
+[ 4 bytes] DWORD    dwSignature1  = 0x9AA2D903
+[ 4 bytes] DWORD    dwSignature2  = 0xB54BFB65
+[ 4 bytes] DWORD    dwFlags
+[ 4 bytes] DWORD    dwVersion       { Ve.Ve.Mj.Mj:Mn.Mn.Bl.Bl }
+[16 bytes] BYTE{16} aMasterSeed
+[16 bytes] BYTE{16} aEncryptionIV
+[ 4 bytes] DWORD    dwGroups        Number of groups in database
+[ 4 bytes] DWORD    dwEntries       Number of entries in database
+
+===============================================================================
+
+One group: [FIELDTYPE(FT)][FIELDSIZE(FS)][FIELDDATA(FD)]
+           [FT+FS+(FD)][FT+FS+(FD)][FT+FS+(FD)][FT+FS+(FD)][FT+FS+(FD)]...
+
+[ 1 byte ] FIELDTYPE
+[ 4 bytes] FIELDSIZE
+[ n bytes] FIELDDATA, n = FIELDSIZE
+
+Notes:
+- FIELDTYPE can be one of the following identifiers:
+  * 00: Invalid or comment block, block is ignored
+  * 01: Group ID, FIELDSIZE must be 4 bytes
+  * 02: Group name, FIELDDATA is string of FIELDDATA length
+  * 03: Creation time, FIELDSIZE = 4, FIELDDATA = time_t
+  * 04: Last modification time, FIELDSIZE = 4, FIELDDATA = time_t
+  * 05: Last access time, FIELDSIZE = 4, FIELDDATA = time_t
+  * 06: Expiration time, FIELDSIZE = 4, FIELDDATA = time_t
+  * FF: Group entry terminator, FIELDSIZE must be 0
+- Strings are _not_ null-terminated!
+
+===============================================================================
+
+One entry: [FIELDTYPE(FT)][FIELDSIZE(FS)][FIELDDATA(FD)]
+           [FT+FS+(FD)][FT+FS+(FD)][FT+FS+(FD)][FT+FS+(FD)][FT+FS+(FD)]...
+
+[ 1 byte ] FIELDTYPE
+[ 4 bytes] FIELDSIZE
+[ n bytes] FIELDDATA, n = FIELDSIZE
+
+Notes:
+- FIELDTYPE can be one of the following identifiers:
+  * 00: Invalid or comment block, block is ignored
+  * 01: UUID, uniquely identifying an entry, FIELDSIZE must be 16
+  * 02: Group ID, identifying the group of the entry, FIELDSIZE = 4
+  * 03: Image ID, identifying the image/icon of the entry, FIELDSIZE = 4
+  * 04: Title of the entry, FIELDDATA is a string of FIELDSIZE length
+  * 05: URL string, FIELDDATA is a string of FIELDSIZE length
+  * 06: UserName string, FIELDDATA is a string of FIELDSIZE length
+  * 07: Password string, FIELDDATA is a string of FIELDSIZE length
+  * 08: Notes string, FIELDDATA is a string of FIELDSIZE length
+  * 09: Creation time, FIELDSIZE = 4, FIELDDATA = time_t
+  * 0A: Last modification time, FIELDSIZE = 4, FIELDDATA = time_t
+  * 0B: Last access time, FIELDSIZE = 4, FIELDDATA = time_t
+  * 0C: Expiration time, FIELDSIZE = 4, FIELDDATA = time_t
+  * FF: Entry terminator, FIELDSIZE must be 0
+- Strings are _not_ null-terminated!

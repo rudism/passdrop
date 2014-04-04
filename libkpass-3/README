@@ -1,0 +1,68 @@
+What is this project?
+=====================
+
+This project is a from-scratch C implementation of reading and writing KeePass
+1.x format password databases.  From this simple base, other programs can be
+written to manipulate KeePass databases without researching all of the innards
+of the KeePass database structure.
+
+What good is that?
+==================
+
+Well, if you wanted to write a client with a different interface, such as
+command-line or a GUI on a limited device, you'd have significant trouble when
+looking at the KeePass and KeePassX projects.  Extricating the database
+handling code from the interface code is difficult if not impossible.  It just
+made more sense to start fresh and make a simple C library that could be used
+for other programs and to make bindings to other languages.
+
+How do I use it?
+================
+
+The header file should give a good idea as to the main functions.  The library
+is incredibly simple because it's focused on the encryption and decryption.
+How the client wants to modify the database is entirely up to that program.  As
+long as the database structure is consistent, the library will encrypt it.
+
+Why don't you use mlock?
+========================
+
+I've seen it suggested before.  I even deeply considered it when I started out
+writing this library.  The idea being that a program should mlock all of the
+memory that stores passwords so it won't be written to a swap device.  It's a
+great idea until you realize a significant problem.  The passwords might not
+touch swap while in your program, but once it enters the paste buffer or gets
+written to the screen who knows where it will get dropped.  Sure, you can say,
+"It wasn't my program!" but that doesn't help anyone.
+
+Once you realize that passwords will probably leak to the swap through other
+sources (along with all sorts of other information), it becomes obvious that
+encrypting the swap is the real solution.  And after you've encrypted your
+swap, there's no reason to use mlock.
+
+Supporting 2.x databases
+========================
+
+I haven't looked into 2.x very much, but the feature list mentions that its
+internal structure is XML.  The bulk of this library is for parsing/generating
+the binary format of KeePass 1.x databases.  This suggests that it would be
+much better off as a new, separate project, but I would not expect a
+"libkpass2" soon.
+
+Should I open databases I don't trust
+=====================================
+
+The library should resist overflows and the like from malformed databases.
+However, as the original specification never specified if all fields must be
+present for the groups/entries in the database.  Indeed, it is easy to write a
+database that omits portions of each group or entry and still comply to the
+format.  With this in mind, the programs that use the library must keep in mind
+that some fields may be null, despite whether it makes sense or not.  Enforcing
+the existence of every entity may appear later as some sort of "strict mode".
+
+There are still ways to make a database that parses but is nonsense.  For
+example, having duplicate UUIDs on different entries would potentially drive a
+client to do some odd things if it wasn't aware of it.  Groups with parent
+groups that don't exist.  There isn't anything in the database to enforce
+consistency, which is probably part of the drive to move to XML for version
+2.x.

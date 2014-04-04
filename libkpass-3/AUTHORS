@@ -1,0 +1,13 @@
+Nearly all of this project has been written by Brian De Wolf
+<libkpass@bldewolf.com>.  Other credits are as follows:
+
+The KeePass project, as well as the KeePassX project, have been significant
+resources, both in design documents and as reference implementations.
+DbFormat.txt is from the KeePass project and is included as a reference (it was
+not specifically licensed and can be removed on request).
+
+Thanks to OpenSSL for doing the cryptographic dirty work for me.
+
+The byte swapping functions are copies of the GNU C Library's htonl and htons
+functions, with the affect reversed to achieve a host-to-little-endian
+function.
