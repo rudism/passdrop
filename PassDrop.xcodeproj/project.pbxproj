@@ -200,6 +200,7 @@
 		A2ADED9F12FCED9E0082EEA4 /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A2ADED9D12FCED9E0082EEA4 /* AboutViewController.xib */; };
 		A2ADEDD212FCF99D0082EEA4 /* DatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A2ADEDD112FCF99D0082EEA4 /* DatabaseManager.m */; };
 		A2B6A20315E00E6C00E29EC3 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A2B6A20215E00E6C00E29EC3 /* MainWindow-iPad.xib */; };
+		A2B9995218EF6A120055556A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2B9995118EF6A120055556A /* Images.xcassets */; };
 		A2CEEDC718EF5C0700BA1341 /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = A2CEEDBA18EF5C0700BA1341 /* Default~iphone.png */; };
 		A2CEEDC818EF5C0700BA1341 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = A2CEEDBB18EF5C0700BA1341 /* Default.png */; };
 		A2CEEDC918EF5C0700BA1341 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A2CEEDBC18EF5C0700BA1341 /* Default-568h@2x.png */; };
@@ -467,6 +468,7 @@
 		A2ADEDD012FCF99D0082EEA4 /* DatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseManager.h; sourceTree = "<group>"; };
 		A2ADEDD112FCF99D0082EEA4 /* DatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseManager.m; sourceTree = "<group>"; };
 		A2B6A20215E00E6C00E29EC3 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		A2B9995118EF6A120055556A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = PassDrop/Images.xcassets; sourceTree = "<group>"; };
 		A2CEEDBA18EF5C0700BA1341 /* Default~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~iphone.png"; path = "images/Default~iphone.png"; sourceTree = "<group>"; };
 		A2CEEDBB18EF5C0700BA1341 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = images/Default.png; sourceTree = "<group>"; };
 		A2CEEDBC18EF5C0700BA1341 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "images/Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -581,6 +583,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A2B9995118EF6A120055556A /* Images.xcassets */,
 				A24C365F141E3DDE001BB5D3 /* template.kdb */,
 				A204B5A412FDEAF400A4D656 /* Images */,
 				A204B5A312FDEAE900A4D656 /* UI */,
@@ -1046,6 +1049,7 @@
 				A24F371F130360CB00A4AF66 /* 12@2x.png in Resources */,
 				A24F3720130360CB00A4AF66 /* 13@2x.png in Resources */,
 				A24F3721130360CB00A4AF66 /* 14@2x.png in Resources */,
+				A2B9995218EF6A120055556A /* Images.xcassets in Resources */,
 				A24F3722130360CB00A4AF66 /* 15@2x.png in Resources */,
 				A24F3723130360CB00A4AF66 /* 16@2x.png in Resources */,
 				A24F3724130360CB00A4AF66 /* 17@2x.png in Resources */,
@@ -1260,6 +1264,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Rudis Muiznieks (U55J55US8B)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rudis Muiznieks (U55J55US8B)";
 				COPY_PHASE_STRIP = NO;
@@ -1293,6 +1299,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Rudis Muiznieks (U55J55US8B)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rudis Muiznieks (U55J55US8B)";
 				COPY_PHASE_STRIP = YES;
