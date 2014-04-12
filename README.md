@@ -2,13 +2,13 @@
 
 PassDrop is a fully-featured secure password management system, compatible with the free [KeePass 1.x (Classic)](http://keepass.info/) and multi-platform [KeePassX](http://www.keepassx.org/) desktop applications. PassDrop uses the free [DropBox](http://www.dropbox.com) storage service for hassle-free synchronization of your password databases between your iPhone, Windows, OS X, and Linux desktop computers.
 
-The current version 1.22 is available on the [iOS App Store](http://itunes.apple.com/us/app/passdrop/id431185109). Version 1.23 which has been optimized for iOS 7 has been submitted to Apple and is awaiting approval as of 4/4/2014.
+The current version 1.2 is available on the [iOS App Store](http://itunes.apple.com/us/app/passdrop/id431185109).
 
 ##PassDrop FAQ
 
 If you are experiencing issues or need help using PassDrop, please check out the [PassDrop FAQ](https://github.com/rudism/passdrop/blob/master/FAQ.md).
 
-##Current Features (1.23)
+##Current Features (1.2)
 
 - Strong emphasis on clean, simple, intuitive user interface
 - Fully optimized for all devices including retina iPhones and iPads
