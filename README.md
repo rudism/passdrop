@@ -1,6 +1,10 @@
 #passdrop
 
-*Note: I am no longer actively developing PassDrop, as I no longer use iOS devices or Mac OS X.*
+**Note: I am no longer actively developing PassDrop, as I no longer use iOS devices or Mac OS X.**
+
+**Since the existing version of PassDrop uses an outdated DropBox API that will or has stopped working (depending on when you read this), I have removed it from the app store to prevent users buying an app that no longer functions.**
+
+**If you want a more up to date version of PassDrop, check out [Chad Austin's fork](https://github.com/chadaustin/passdrop), which should be available on the app store as PassDrop 2.**
 
 PassDrop is a fully-featured secure password management system, compatible with the free [KeePass 1.x (Classic)](http://keepass.info/) and multi-platform [KeePassX](http://www.keepassx.org/) desktop applications. PassDrop uses the free [DropBox](http://www.dropbox.com) storage service for hassle-free synchronization of your password databases between your iPhone, Windows, OS X, and Linux desktop computers.
 
