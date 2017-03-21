@@ -1,20 +1,18 @@
-#passdrop
+# passdrop
 
 **Note: I am no longer actively developing PassDrop, as I no longer use iOS devices or Mac OS X.**
 
 **Since the existing version of PassDrop uses an outdated DropBox API that will or has stopped working (depending on when you read this), I have removed it from the app store to prevent users buying an app that no longer functions.**
 
-**If you want a more up to date version of PassDrop, check out [Chad Austin's fork](https://github.com/chadaustin/passdrop), which should be available on the app store as PassDrop 2.**
+**If you want a more up to date version of PassDrop, check out [Chad Austin's fork](https://github.com/chadaustin/passdrop), which is available on the app store as [PassDrop 2](https://itunes.apple.com/us/app/passdrop-2/id1206056096).**
 
 PassDrop is a fully-featured secure password management system, compatible with the free [KeePass 1.x (Classic)](http://keepass.info/) and multi-platform [KeePassX](http://www.keepassx.org/) desktop applications. PassDrop uses the free [DropBox](http://www.dropbox.com) storage service for hassle-free synchronization of your password databases between your iPhone, Windows, OS X, and Linux desktop computers.
 
-The current version 1.2 is available on the [iOS App Store](http://itunes.apple.com/us/app/passdrop/id431185109).
-
-##PassDrop FAQ
+## PassDrop FAQ
 
 If you are experiencing issues or need help using PassDrop, please check out the [PassDrop FAQ](https://github.com/rudism/passdrop/blob/master/FAQ.md).
 
-##Current Features (1.2)
+## Current Features (1.2)
 
 - Strong emphasis on clean, simple, intuitive user interface
 - Fully optimized for all devices including retina iPhones and iPads
@@ -34,7 +32,7 @@ If you are experiencing issues or need help using PassDrop, please check out the
 - Hide "Backup" group results when searching entries
 - Encrypted HTTPS communication directly with the official DropBox API for maximum security
 
-##Commonly Requested Missing Features
+## Commonly Requested Missing Features
 
 - File attachment viewing and sharing
 - Option to visually mark or hide expired entries
